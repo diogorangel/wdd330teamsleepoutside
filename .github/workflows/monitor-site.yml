@@ -1,0 +1,38 @@
+name: Monitoramento de Disponibilidade do Site no Ar
+
+on:
+  workflow_dispatch: # Permite que você execute este workflow manualmente na aba "Actions"
+  schedule:
+    # Este cron irá rodar a cada 30 minutos (ajuste conforme a sua necessidade).
+    # Exemplo: '0 */6 * * *' para rodar a cada 6 horas.
+    # Exemplo: '0 8 * * *' para rodar todos os dias às 8h UTC.
+    - cron: '*/30 * * * *'
+
+jobs:
+  check-deployed-site:
+    runs-on: ubuntu-latest # O ambiente virtual onde o job será executado
+
+    env:
+      # *** IMPORTANTE: A URL do seu site no ar! ***
+      SITE_URL: https://diogorangel.github.io/wdd330teamsleepoutside/
+
+    steps:
+      - name: Checkout do Código
+        uses: actions/checkout@v4
+        # Este passo baixa o código do seu repositório.
+        # É necessário para que o workflow possa acessar o script 'scripts/check-website.js'.
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24' # Define a versão do Node.js (Vite 4.x funciona bem com Node 16+, então 20 é uma LTS segura).
+          # Para este script simples, não precisamos de cache de npm ou 'npm install',
+          # pois ele usa o 'fetch' global do Node.js 20.
+
+      - name: Executar Script de Verificação do Site
+        # Este passo executa o script Node.js.
+        # A variável de ambiente SITE_URL (definida acima em 'env') será automaticamente
+        # acessível dentro do script via 'process.env.SITE_URL'.
+        run: node src/js/check-website.js
+        # Certifique-se de que 'src/js/check-website.js' esteja na raiz do seu repositório
+        # ou ajuste o caminho acima se ele estiver em outro local.
