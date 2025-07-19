@@ -38,6 +38,3 @@ export function renderListWithTemplate(
   const htmlStrings = list.map(templateFn);
   parentElement.insertAdjacentHTML(position, htmlStrings.join(""));
 }
-export function getLocalStorage(key) {
-  return JSON.parse(localStorage.getItem(key));
-}

@@ -1,10 +1,7 @@
-import ProductData from "./ProductData.mjs";
-
 //const dataSource = new ProductData("tents");
 
 // main.js
 
-import ProductData from "./ProductData.mjs";
 import ProductList from "./ProductList.mjs";
 
 const dataSource = new ProductData("tents");
