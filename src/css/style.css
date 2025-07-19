@@ -90,7 +90,7 @@ p {
   margin-top: -1.3em;
 }
 
-.logo--square > div {
+.logo--square>div {
   margin-top: -1.7em;
 }
 
@@ -239,6 +239,70 @@ button {
 .cart-card__price {
   grid-row: 2;
   grid-column: 3;
+}
+
+/* Ensure the cart container allows for relative positioning */
+.cart {
+  /* Optional: You might need to adjust margin/padding here for overall layout */
+  display: flex;
+  /* Or other display property that suits your layout */
+  align-items: center;
+  justify-content: center;
+  /* Adjust as needed */
+}
+
+/* Make the cart link the positioning reference */
+.cart-link {
+  position: relative;
+  /* This is crucial! */
+  display: inline-block;
+  /* Ensures the link wraps its content and respects width/height */
+  /* You might need to adjust padding or margin on the link itself if the SVG has extra space */
+}
+
+/* Style for the superscript number */
+.cart-count {
+  position: absolute;
+  /* Position relative to the .cart-link */
+  top: 0;
+  /* Align to the top of the .cart-link */
+  right: 0;
+  /* Align to the right of the .cart-link */
+  transform: translate(50%, -50%);
+  /* Adjust to move it out further */
+  background-color: #ff5722;
+  /* Vibrant orange, similar to the image */
+  color: white;
+  font-size: 0.7em;
+  /* Smaller font for superscript effect */
+  font-weight: bold;
+  border-radius: 50%;
+  /* Makes it circular */
+  padding: 3px 6px;
+  /* Adjust padding to control the size of the circle */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 18px;
+  /* Ensures a minimum width for single/double digits */
+  height: 18px;
+  /* Ensures a minimum height */
+  box-sizing: border-box;
+  /* Includes padding and border in the element's total width and height */
+  text-align: center;
+  /* Center the text */
+  line-height: 1;
+  /* Ensures text is vertically centered without extra line height */
+}
+
+/* Styles for the SVG icon within the cart link */
+.cart-link svg {
+  width: 40px;
+  /* Adjust as needed for your icon size */
+  height: 40px;
+  /* Adjust as needed for your icon size */
+  display: block;
+  /* Helps in consistent sizing and avoids extra space below */
 }
 
 @media screen and (min-width: 500px) {
