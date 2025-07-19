@@ -3,61 +3,59 @@ name: CI com Node.js e Vite
 on:
   push:
     branches:
-      - master # ou master, dependendo do seu branch principal
+      - master # Altere para 'main' se esse for o seu branch principal
   pull_request:
     branches:
-      - master # ou master, dependendo do seu branch principal
+      - master # Altere para 'main' se esse for o seu branch principal
   workflow_dispatch: # Permite execução manual
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # O executor (máquina virtual) onde o job será executado
+
     steps:
-      # ... passos anteriores (checkout, setup-node, npm install --force ou npm ci)
+      - name: Checkout do Código
+        uses: actions/checkout@v4
+        # Este passo é ESSENCIAL e deve ser o primeiro para baixar seu código.
 
-      - name: Adicionar node_modules/.bin ao PATH e rodar npm start
-        run: |
-          export PATH=$(npm bin):$PATH # Garante que node_modules/.bin esteja no PATH
-          npm run start
-        shell: /usr/bin/bash -e {0}
-          # Este 'shell' é geralmente o padrão, mas vale a pena mantê-lo explícito aqui.
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Versão LTS recomendada do Node.js para Vite 4.x
+          cache: 'npm' # Habilita o cache de dependências do npm para instalações mais rápidas
 
-      - name: Rodar Vite diretamente via npx com caminho completo
-        run: $(npm bin)/npx vite
-        # Isso tenta chamar o npx diretamente do diretório .bin
-        # e então pede para ele executar o vite.
-
-      # Ou, se o problema for com npx em si e você sabe o caminho do vite:
-      - name: Rodar Vite binário diretamente (alternativa extrema)
-        run: node node_modules/vite/bin/vite.js
-        # Isso assume que o executável 'vite' é um script Node.js.
-        # Use isso apenas se as outras opções falharem e você confirmar o caminho do arquivo.
-
-
-      - name: Verificar versão do npm e npx (Debug)
+      - name: Verificar versão do npm e npx (Depuração)
+        # Este passo é para depuração. Ele mostrará as versões do npm/npx
+        # e onde eles estão no PATH, além de mostrar o PATH completo.
+        # Pode ser removido após a correção do problema.
         run: |
           npm -v
           npx -v
           which npm
           which npx
           echo $PATH
-        # Este passo é para depuração. Ele mostrará as versões do npm/npx
-        # e onde eles estão no PATH, além de mostrar o PATH completo.
-        # Pode ser removido após a correção do problema.
 
-      - name: Limpar cache do npm e reinstalar dependências
+      - name: Limpar cache do npm e instalar dependências
+        # O 'working-directory' aqui garante que o npm opere na pasta 'src'.
+        working-directory: ./src
         run: |
           npm cache clean --force # Limpa o cache do npm (útil se o cache estiver corrompido)
           npm install --force     # Reinstala todas as dependências com força
-          # Alternativamente, para instalações mais confiáveis em CI (se você usa package-lock.json):
+          # ALTERNATIVA para CI (se você tem package-lock.json, que é recomendado):
           # npm ci
 
-      - name: Verificar se Vite foi instalado no .bin (Debug)
-        run: ls -l node_modules/.bin/vite
-        # Este passo verificará se o executável 'vite' está presente
-        # e quais são suas permissões. Se ele não existir, o 'npm install' falhou.
+      - name: Verificar se Vite foi instalado no .bin (Depuração)
+        # Este passo é para depuração. Ele verificará se o executável 'vite' está presente
+        # e quais são suas permissões dentro da pasta 'src/node_modules/.bin/'.
         # Pode ser removido após a correção do problema.
+        working-directory: ./src
+        run: |
+          echo "Verificando permissões e existência de node_modules/.bin/vite:"
+          ls -la node_modules/.bin/vite || echo "Vite não encontrado em node_modules/.bin/"
+          echo "Conteúdo de node_modules/.bin/:"
+          ls -la node_modules/.bin/
 
       - name: Executar o Projeto (npm run start)
+        # Este passo executa o script 'start' definido no seu package.json dentro da pasta 'src'.
+        working-directory: ./src
         run: npm run start
-        # O shell padrão já é /usr/bin/bash -e {0}, então não precisa especificar
