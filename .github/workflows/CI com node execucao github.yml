@@ -11,18 +11,28 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest # O ambiente onde o job será executado
-
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout do Código
-        uses: actions/checkout@v4
+      # ... passos anteriores (checkout, setup-node, npm install --force ou npm ci)
 
-      - name: Configurar Node.js e npm
-        uses: actions/setup-node@v4
-        with:
-          node-version: '24' # Use a versão do Node.js que você realmente precisa. '20' é uma LTS estável.
-          # O Vite 4.x funciona bem com Node.js 16+, então 20 é seguro.
-          cache: 'npm' # Habilita o cache de dependências do npm para instalações mais rápidas
+      - name: Adicionar node_modules/.bin ao PATH e rodar npm start
+        run: |
+          export PATH=$(npm bin):$PATH # Garante que node_modules/.bin esteja no PATH
+          npm run start
+        shell: /usr/bin/bash -e {0}
+          # Este 'shell' é geralmente o padrão, mas vale a pena mantê-lo explícito aqui.
+
+      - name: Rodar Vite diretamente via npx com caminho completo
+        run: $(npm bin)/npx vite
+        # Isso tenta chamar o npx diretamente do diretório .bin
+        # e então pede para ele executar o vite.
+
+      # Ou, se o problema for com npx em si e você sabe o caminho do vite:
+      - name: Rodar Vite binário diretamente (alternativa extrema)
+        run: node node_modules/vite/bin/vite.js
+        # Isso assume que o executável 'vite' é um script Node.js.
+        # Use isso apenas se as outras opções falharem e você confirmar o caminho do arquivo.
+
 
       - name: Verificar versão do npm e npx (Debug)
         run: |
