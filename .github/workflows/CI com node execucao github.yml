@@ -1,0 +1,53 @@
+name: CI com Node.js e Vite
+
+on:
+  push:
+    branches:
+      - master # ou master, dependendo do seu branch principal
+  pull_request:
+    branches:
+      - master # ou master, dependendo do seu branch principal
+  workflow_dispatch: # Permite execução manual
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # O ambiente onde o job será executado
+
+    steps:
+      - name: Checkout do Código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js e npm
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24' # Use a versão do Node.js que você realmente precisa. '20' é uma LTS estável.
+          # O Vite 4.x funciona bem com Node.js 16+, então 20 é seguro.
+          cache: 'npm' # Habilita o cache de dependências do npm para instalações mais rápidas
+
+      - name: Verificar versão do npm e npx (Debug)
+        run: |
+          npm -v
+          npx -v
+          which npm
+          which npx
+          echo $PATH
+        # Este passo é para depuração. Ele mostrará as versões do npm/npx
+        # e onde eles estão no PATH, além de mostrar o PATH completo.
+        # Pode ser removido após a correção do problema.
+
+      - name: Limpar cache do npm e reinstalar dependências
+        run: |
+          npm cache clean --force # Limpa o cache do npm (útil se o cache estiver corrompido)
+          npm install --force     # Reinstala todas as dependências com força
+          # Alternativamente, para instalações mais confiáveis em CI (se você usa package-lock.json):
+          # npm ci
+
+      - name: Verificar se Vite foi instalado no .bin (Debug)
+        run: ls -l node_modules/.bin/vite
+        # Este passo verificará se o executável 'vite' está presente
+        # e quais são suas permissões. Se ele não existir, o 'npm install' falhou.
+        # Pode ser removido após a correção do problema.
+
+      - name: Executar o Projeto (npm run start)
+        run: npm run start
+        # O shell padrão já é /usr/bin/bash -e {0}, então não precisa especificar
