@@ -1,0 +1,21 @@
+{
+  "name": "src",
+  "version": "24.3.0",
+  "description": "",
+  "license": "ISC",
+  "author": "Diogo Rangel",
+  "type": "commonjs",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21"
+  }
+}
