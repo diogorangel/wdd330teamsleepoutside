@@ -21,20 +21,3 @@ export function setClick(selector, callback) {
   });
   qs(selector).addEventListener("click", callback);
 }
-// utils.mjs
-
-export function renderListWithTemplate(
-  templateFn,
-  parentElement,
-  list,
-  position = "afterbegin",
-  clear = false
-) {
-  // Clear out the element if the `clear` argument is true
-  if (clear) {
-    parentElement.innerHTML = "";
-  }
-
-  const htmlStrings = list.map(templateFn);
-  parentElement.insertAdjacentHTML(position, htmlStrings.join(""));
-}
