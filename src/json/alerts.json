@@ -1,0 +1,17 @@
+[
+  {
+    "message": "This is only a test alert with a dark blue background and white text!",
+    "background": "darkblue",
+    "color": "white"
+  },
+  {
+    "message": "Special offer: Free shipping on all orders over $50!",
+    "background": "#4CAF50",
+    "color": "#FFFFFF"
+  },
+  {
+    "message": "Limited stock on popular items. Shop now!",
+    "background": "#FFC107",
+    "color": "#333333"
+  }
+]
